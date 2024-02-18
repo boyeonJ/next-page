@@ -1,15 +1,7 @@
 import Script from "next/script";
 import * as stores from "@/data/store_data.json";
+import Store from "@/components/store"
 import { useState } from "react";
-import Image from "next/image";
-import {
-  AiOutlineClose,
-  AiOutlineInfoCircle,
-  AiOutlineCheck,
-  AiOutlinePhone,
-} from "react-icons/ai";
-import { HiOutlineMapPin } from "react-icons/hi2";
-
 declare global {
   interface Window {
     kakao: any;
@@ -68,84 +60,23 @@ export default function Home() {
         })
       })
     })
-
   }
+
+
 
   return (
     <>
-      <Script
+      <Scriptb
         strategy="afterInteractive"
         type="text/javascript"
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=&autoload=false`}
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_CLIENT}0&autoload=false`}
         onReady={loadKakaoMap}
       />
       <div id="map" className="w-full h-screen"></div>
 
       {store && (
-        <div className="fixed p-8 inset-x-0 mx-auto w-full max-w-sm md:max-w-xl bg-white bottom-20 z-10 rounded-lg shadow-lg ">
-          <div className="flex gap-2 items-center">
-            <Image
-              src={
-                store?.bizcnd_code_nm
-                  ? `/images/markers/${store?.bizcnd_code_nm}.png`
-                  : "/images/markers/default.png"
-              }
-              width={40}
-              height={40}
-              alt="아이콘 이미지"
-            />
-            <div>
-              <p className="font-semibold">
-                {store?.upso_nm}
-              </p>
-              <p className="text-sm">
-                {store?.bizcnd_code_nm}
-              </p>
-            </div>
-          </div>
-
-
-          <div className="mt-4 flex gap-2 items-center">
-            <HiOutlineMapPin />
-            {store?.rdn_code_nm}
-          </div>
-
-          <div className="mt-2 flex gap-2 items-center">
-            <AiOutlinePhone />
-            {store?.tel_no}
-          </div>
-        </div>
+        <Store store={store} />
       )}
     </>
   );
 }
-
-
-// "tel_no": null,
-// "crtfc_gbn": "19",
-// "upd_time": 1688569200000,
-// "cob_code_nm": "식육즉석판매가공업",
-// "crtfc_class": null,
-// "rdn_detail_addr": null,
-// "upso_sno": null,
-// "bizcnd_code_nm": "default",
-// "upso_nm": "축산사랑",
-// "gnt_no": null,
-// "map_indict_yn": "Y",
-// "y_dnts": "37.6165063",
-// "cob_code": "501",
-// "x_cnts": "126.932540",
-// "owner_nm": "유영성",
-// "bizcnd_code": "50101",
-// "crtfc_ymd": "2023-07-06",
-// "crt_time": 1688569200000,
-// "crtfc_sno": "서울 제2023-01028호",
-// "crtfc_yn": "Y",
-// "rdn_addr_code": null,
-// "rdn_code_nm": "서울특별시 은평구 불광로109",
-// "cgg_code": "3110000",
-// "cgg_code_nm": "은평구",
-// "crtfc_upso_mgt_sno": 14597,
-// "use_yn": "Y",
-// "crtfc_gbn_nm": "우리동네 모범정육점",
-// "food_menu": null
