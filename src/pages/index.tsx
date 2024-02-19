@@ -1,7 +1,8 @@
 import Script from "next/script";
-import * as stores from "@/data/store_data.json";
 import Store from "@/components/store"
 import { useState } from "react";
+import { StoreType } from "@/interface";
+
 declare global {
   interface Window {
     kakao: any;
@@ -11,11 +12,12 @@ declare global {
 const DEFAULT_LAT = 37.497625203;
 const DEFAULT_LNG = 127.03088379;
 
-export default function Home() {
+export default function Home({ stores }: { stores: StoreType[] }) {
   const [store, setStore] = useState<any>(null);
 
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
+      //map
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(DEFAULT_LAT, DEFAULT_LNG),
@@ -26,12 +28,12 @@ export default function Home() {
       const imageOption = { offset: new window.kakao.maps.Point(27, 69) };
 
       //marker
-      stores['DATA'].map((store) => {
-        const imageSrc = store?.bizcnd_code_nm
-          ? `/images/markers/${store?.bizcnd_code_nm}.png`
+      stores.map((store) => {
+        const imageSrc = store?.category
+          ? `/images/markers/${store?.category}.png`
           : "/images/markers/default.png";
         const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-        const markerPosition = new window.kakao.maps.LatLng(store?.y_dnts, store?.x_cnts);
+        const markerPosition = new window.kakao.maps.LatLng(store?.lat, store?.lng);
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
           image: markerImage
@@ -39,10 +41,9 @@ export default function Home() {
 
         marker.setMap(map);
 
-        const content = `<div class="infowindow">${store.upso_nm}</div>`;
+        const content = `<div class="infowindow">${store.name}</div>`;
         const overlay = new window.kakao.maps.CustomOverlay({
           content: content,
-          map: map,
           position: marker.getPosition(),
           xAnchor: 0.6,
           yAnchor: 0.91,
@@ -56,20 +57,17 @@ export default function Home() {
         });
         window.kakao.maps.event.addListener(marker, 'click', function () {
           setStore(store);
-          console.log(store)
         })
       })
     })
   }
 
-
-
   return (
     <>
-      <Scriptb
+      <Script
         strategy="afterInteractive"
         type="text/javascript"
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_CLIENT}0&autoload=false`}
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_CLIENT}&autoload=false`}
         onReady={loadKakaoMap}
       />
       <div id="map" className="w-full h-screen"></div>
@@ -79,4 +77,15 @@ export default function Home() {
       )}
     </>
   );
+}
+
+export async function getStaticProps() {
+  const stores = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/stores`)
+    .then((res) => res.json());
+
+  return {
+    props: { stores },
+    revalidate: 60 * 60,
+  };
 }
