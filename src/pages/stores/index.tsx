@@ -4,13 +4,18 @@ import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query'
 import Loading from "@/components/Loading";
 import { useStores } from "@/data/store";
+import { useRouter } from "next/router";
+import Pagination from "@/components/Pagination";
 
 const StoreListPage = () => {
+    const router = useRouter();
+    const { page = '1' } = router.query;
+
     const {
         isLoading,
         isError,
-        data: stores,
-    } = useStores();
+        data,
+    } = useStores(page);
 
     if (isError) {
         return (
@@ -20,13 +25,12 @@ const StoreListPage = () => {
         );
     }
 
-
     return (
         <div className="w-full max-w-5xl m-auto mt-7" key="store-list-page">
             <ul className="divide-y divide-gray-100">
                 {isLoading ?
                     (<Loading />) :
-                    (stores?.map((store, index) => (
+                    (data?.data.map((store, index) => (
                         <li key={index} className="flex  w-full justify-between p-4">
                             <div className="flex gap-3">
                                 <Image
@@ -57,6 +61,9 @@ const StoreListPage = () => {
                     )
                 }
             </ul>
+            {data && (
+                <Pagination total={data.totalPage as number} page={page as string} />
+            )}
         </div >
     )
 }

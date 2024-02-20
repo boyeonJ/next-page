@@ -1,14 +1,14 @@
-import { StoreType } from "@/interface";
+import { StoreApiResponse, StoreType } from "@/interface";
 import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query'
 
-export const useStores = () => {
+export const useStores = (page: string | string[]) => {
     const {
         isLoading,
         isError,
         data,
-    } = useQuery("stores", async () => {
-        const response: AxiosResponse<StoreType[]> = await axios("/api/stores");
+    } = useQuery(["stores", page], async () => {
+        const response: AxiosResponse<StoreApiResponse> = await axios(`/api/stores?page=${page}`);
         return response.data;
     });
 
