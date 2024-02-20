@@ -2,6 +2,7 @@ import Script from "next/script";
 import Store from "@/components/store"
 import { useState } from "react";
 import { StoreType } from "@/interface";
+import axios from 'axios';
 
 declare global {
   interface Window {
@@ -80,12 +81,10 @@ export default function Home({ stores }: { stores: StoreType[] }) {
 }
 
 export async function getStaticProps() {
-  const stores = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/stores`)
-    .then((res) => res.json());
+  const stores = await axios(`${process.env.NEXT_PUBLIC_API_URL}/api/stores`);
 
   return {
-    props: { stores },
+    props: { stores: stores.data },
     revalidate: 60 * 60,
   };
 }
