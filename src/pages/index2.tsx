@@ -16,8 +16,6 @@ const DEFAULT_LNG = 127.03088379;
 export default function Home({ stores }: { stores: StoreType[] }) {
   const [store, setStore] = useState<any>(null);
 
-  console.log(stores);
-
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
       //map

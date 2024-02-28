@@ -2,14 +2,16 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { RecoilRoot } from 'recoil';
 
-
-export const QueryProviders = ({ children }: { children: ReactNode }) => {
+export const NextProviders = ({ children }: { children: ReactNode }) => {
     const queryClient = new QueryClient();
     return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-            <ReactQueryDevtools />
-        </QueryClientProvider>
+        <RecoilRoot>
+            <QueryClientProvider client={queryClient}>
+                {children}
+                <ReactQueryDevtools />
+            </QueryClientProvider>
+        </RecoilRoot>
     )
 }
