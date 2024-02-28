@@ -16,6 +16,8 @@ const DEFAULT_LNG = 127.03088379;
 export default function Home({ stores }: { stores: StoreType[] }) {
   const [store, setStore] = useState<any>(null);
 
+  console.log(stores);
+
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
       //map
@@ -85,7 +87,7 @@ export async function getStaticProps() {
     `${process.env.NEXT_PUBLIC_API_URL}/api/stores`);
 
   return {
-    props: { stores: stores.data },
+    props: { stores: stores.data.data },
     revalidate: 60 * 60,
   };
 }
