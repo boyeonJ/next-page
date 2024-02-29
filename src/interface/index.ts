@@ -4,7 +4,7 @@ export interface StoreType {
   address?: string | null;
   lat?: string | null;
   lng?: string | null;
-  name?: string | null;
+  name?: string;
   category?: string | null;
   storeType?: string | null;
   foodCertifyName?: string | null;

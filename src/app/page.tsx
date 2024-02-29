@@ -1,5 +1,6 @@
 import Map from "@/components/map";
 import Marker from "@/components/marker";
+import Store from "@/components/store";
 
 async function getStores() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stores`, {
@@ -20,6 +21,7 @@ export default async function Home() {
         <>
             <Map />
             <Marker stores={stores} />
+            <Store />
         </>
     );
 }
