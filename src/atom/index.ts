@@ -1,4 +1,4 @@
-import { SearchParams, StoreType } from '@/interface'
+import { StoreType } from '@/interface'
 import { atom } from 'recoil'
 
 export const mapState = atom({
@@ -10,9 +10,4 @@ export const mapState = atom({
 export const currentStoreState = atom<StoreType | null>({
     key: 'store',
     default: null,
-})
-
-export const searchParamsState = atom<SearchParams>({
-    key: 'searchParams',
-    default: {},
 })

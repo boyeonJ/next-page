@@ -14,9 +14,10 @@ const Store = () => {
     const router = useRouter();
 
     return (
-        <div className="fixed p-8 inset-x-0 mx-auto w-full max-w-sm md:max-w-xl bg-white bottom-20 z-10 rounded-lg shadow-lg ">
+        <>
             {store && (
-                <>
+                <div className="fixed p-8 inset-x-0 mx-auto w-full max-w-sm md:max-w-xl bg-white bottom-20 z-10 rounded-lg shadow-lg ">
+
                     <div className="flex gap-2 items-center">
                         <Image
                             src={
@@ -51,9 +52,9 @@ const Store = () => {
                         className="font-semibold">
                         상세보기
                     </button>
-                </>
+                </div >
             )}
-        </div>
+        </>
     )
 }
 

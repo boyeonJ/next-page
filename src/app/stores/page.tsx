@@ -1,25 +1,25 @@
 'use client'
 import Image from "next/image";
-import { AiOutlineSearch } from "react-icons/ai";
 import Loading from "@/components/loading";
 import Pagination from "@/components/pagination";
 import { useSearchParams } from 'next/navigation'
 import { useFetchStoreListQuery } from "@/queries/useFetchStoreListQuery";
 import { StoreType } from "@/interface";
-import { useSetRecoilState } from 'recoil';
-import { searchParamsState } from "@/atom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { AiOutlineSearch } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 
 const StoreListPage = () => {
+    const router = useRouter();
     const searchParams = useSearchParams();
-    const page = searchParams?.get('page') ?? '1';
     const [q, setQ] = useState<string>('');
+    const page = searchParams?.get('page') ?? '1';
 
     const {
         isLoading,
         isError,
-        data,
+        data
     } = useFetchStoreListQuery({ page, q });
 
     if (isError) {
@@ -29,10 +29,8 @@ const StoreListPage = () => {
             </div>
         );
     }
-
     return (
         <div className="w-full max-w-5xl m-auto mt-7" key="store-list-page">
-
             <div className='flex gap-3 items-center mb-4'>
                 <AiOutlineSearch className="w-6 h-6" />
                 <input
@@ -46,8 +44,10 @@ const StoreListPage = () => {
             <ul className="divide-y divide-gray-100">
                 {isLoading ?
                     (<Loading />) :
-                    (data?.data.data.map((store: StoreType, index: number) => (
-                        <li key={index} className="flex  w-full justify-between p-4">
+                    (data?.data.map((store: StoreType, index: number) => (
+                        <li key={index}
+                            className="flex  w-full justify-between p-4"
+                            onClick={() => router.push(`/stores/${store.id}`)}>
                             <div className="flex gap-3">
                                 <Image
                                     src={store?.category
@@ -78,7 +78,7 @@ const StoreListPage = () => {
                 }
             </ul>
             {data && (
-                <Pagination total={data.data.totalPage as number} page={page as string} />
+                <Pagination total={data.totalPage as number} page={page as string} />
             )}
         </div >
     )
