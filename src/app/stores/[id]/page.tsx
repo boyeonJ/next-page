@@ -1,7 +1,5 @@
 'use client'
-import { currentStoreState } from '@/atom';
 import { StoreType } from '@/interface';
-import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { useQuery } from "react-query";
 import Loader from '@/components/Loader';
@@ -28,7 +26,6 @@ export default function Page({ params }: { params: { id: string } }) {
     const {
         data: store,
         isFetching,
-        isSuccess,
         isError,
     } = useQuery<StoreType>(`storeType-${params.id}`, fetchStore, {
         enabled: !!params.id,

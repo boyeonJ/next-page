@@ -1,21 +1,26 @@
-import { StoreType } from "@/interface";
+'use client'
 import Image from "next/image";
-import axios, { AxiosResponse } from 'axios';
-import { useQuery } from 'react-query'
-import Loading from "@/components/Loading";
-import { useStores } from "@/data/store";
-import { useRouter } from "next/router";
-import Pagination from "@/components/Pagination";
+import { AiOutlineSearch } from "react-icons/ai";
+import Loading from "@/components/loading";
+import Pagination from "@/components/pagination";
+import { useSearchParams } from 'next/navigation'
+import { useFetchStoreListQuery } from "@/queries/useFetchStoreListQuery";
+import { StoreType } from "@/interface";
+import { useSetRecoilState } from 'recoil';
+import { searchParamsState } from "@/atom";
+import { useEffect, useState } from "react";
+
 
 const StoreListPage = () => {
-    const router = useRouter();
-    const { page = '1' } = router.query;
+    const searchParams = useSearchParams();
+    const page = searchParams?.get('page') ?? '1';
+    const [q, setQ] = useState<string>('');
 
     const {
         isLoading,
         isError,
         data,
-    } = useStores(page);
+    } = useFetchStoreListQuery({ page, q });
 
     if (isError) {
         return (
@@ -27,10 +32,21 @@ const StoreListPage = () => {
 
     return (
         <div className="w-full max-w-5xl m-auto mt-7" key="store-list-page">
+
+            <div className='flex gap-3 items-center mb-4'>
+                <AiOutlineSearch className="w-6 h-6" />
+                <input
+                    type="search"
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="음식점 검색"
+                    className="w-full bg-gray-50 p-3 rounded-lg outline-none border"
+                />
+            </div>
+
             <ul className="divide-y divide-gray-100">
                 {isLoading ?
                     (<Loading />) :
-                    (data?.data.map((store, index) => (
+                    (data?.data.data.map((store: StoreType, index: number) => (
                         <li key={index} className="flex  w-full justify-between p-4">
                             <div className="flex gap-3">
                                 <Image
@@ -62,7 +78,7 @@ const StoreListPage = () => {
                 }
             </ul>
             {data && (
-                <Pagination total={data.totalPage as number} page={page as string} />
+                <Pagination total={data.data.totalPage as number} page={page as string} />
             )}
         </div >
     )

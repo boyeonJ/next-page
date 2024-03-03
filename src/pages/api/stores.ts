@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<StoreApiResponse>,
 ) {
-  const { page = "", id }: { page?: string, id?: string } = req.query;
+  const { page, id, q }: { page?: string, id?: string, q?: string } = req.query;
   const prisma = new PrismaClient();
 
   if (page) {
@@ -16,6 +16,9 @@ export default async function handler(
       orderBy: { id: "asc" },
       take: 10,
       skip: skipPage * 10,
+      where: {
+        name: q ? { contains: q } : {},
+      }
     });
 
     res.status(200).json({
